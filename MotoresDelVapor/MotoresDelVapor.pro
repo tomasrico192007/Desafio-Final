@@ -11,11 +11,15 @@ CONFIG += c++17
 SOURCES += \
     main.cpp \
     mainwindow.cpp \
-    objetomovil.cpp
+    objetomovil.cpp \
+    obstaculo.cpp \
+    vehiculo.cpp
 
 HEADERS += \
     mainwindow.h \
-    objetomovil.h
+    objetomovil.h \
+    obstaculo.h \
+    vehiculo.h
 
 FORMS += \
     mainwindow.ui
