@@ -13,8 +13,15 @@ public:
     QRectF boundingRect() const override;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 
-    //getter y setter para la posicion, teniendo en cuenta el valor de x y y//
+    //getter para la posicion, teniendo en cuenta el valor de x y y//
     void setPosicion(double x, double y);
+    double getX() const { return x_pos; }
+    double getY() const { return y_pos; }
+    double getVelX() const { return velocidad_x; }
+
+    //setter para cuando se escriban los valores//
+    void setVelX(double v) { velocidad_x = v; }
+    void setX(double x) { x_pos = x; } // Necesario para corregir colisión
 
 protected:
     //variables de la posicion y la velocidad//

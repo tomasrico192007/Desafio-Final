@@ -15,10 +15,13 @@ public:
 
     //Metodos diferentes para actualizar las fisicas, depende el nivel obvio//
     void actualizarFisicaNivel1(); //Movimiento Lineal Acelerado
+
     void actualizarFisicaNivel2(); //Movimiento Parablico
 
     // Para dibujar diferente al carro dependiendo del nivel//
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+
+    void setFuerzaMotor(double fuerza) { fuerzaMotor = fuerza; }
 
 private:
     // las fisicas para los niveles//
