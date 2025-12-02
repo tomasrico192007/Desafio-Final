@@ -16,7 +16,7 @@ void Vehiculo::acelerar(bool activado) {
 
 void Vehiculo::saltar() {
     if (!enElAire) {
-        velocidad_y = -60; //Impulso hacia arriba cuando salta//
+        velocidad_y = -60;
         enElAire = true;
     }
 }
@@ -44,20 +44,31 @@ void Vehiculo::actualizarFisicaNivel1() {
 //Fisica para el movimiento parabolico, un poco mas facil
 void Vehiculo::actualizarFisicaNivel2() {
     double dt = 0.1;
+    double friccionMotor = 20.0;
 
-    //Se aplica la graverdad constante en parabolica//
+    double fuerzaHorizontal = motorEncendido ? fuerzaMotor : -friccionMotor;
+
+    if (!motorEncendido && std::abs(velocidad_x) > 0.1) {
+        fuerzaHorizontal = (velocidad_x > 0) ? -friccionMotor : friccionMotor;
+    } else if (!motorEncendido) {
+        fuerzaHorizontal = 0;
+        velocidad_x = 0;
+    }
+
+    double aceleracionX = fuerzaHorizontal / masa;
+    velocidad_x += aceleracionX * dt;
+    x_pos += velocidad_x * dt;
+
     velocidad_y += gravedad * dt;
     y_pos += velocidad_y * dt;
 
-    //Se simula el suelo en 400//
     if (y_pos >= 400) {
         y_pos = 400;
         velocidad_y = 0;
         enElAire = false;
     }
 
-    //Y se mantiene una constatne actulizacion de las fisicas dependiendo del nivel, en este caso el 1//
-    actualizarFisicaNivel1();
+    setPosicion(x_pos, y_pos);
 }
 
 void Vehiculo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {

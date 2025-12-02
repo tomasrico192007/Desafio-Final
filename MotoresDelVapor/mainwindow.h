@@ -39,6 +39,8 @@ private:
     int vueltasBot2;
 
     QGraphicsRectItem *meta;
+    QList<QGraphicsItem*> obstaculosNivel2;
+    void verificarColisionesNivel2();
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;
@@ -47,6 +49,7 @@ private:
     void verificarLimites(Vehiculo *v);
     void verificarMeta(Vehiculo *v, int &vueltas);
     void configurarNivel1();
+    void configurarNivel2();
     void verificarColisionesNivel1();
 };
 #endif // MAINWINDOW_H

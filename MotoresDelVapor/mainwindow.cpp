@@ -24,7 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &MainWindow::actualizarJuego);
 
     //SE empieza la configuracion para el primer nivel//
-    configurarNivel1();
+    //configurarNivel1();
+    configurarNivel2();
+    verificarColisionesNivel2();
 
     timer->start(16);
 }
@@ -62,6 +64,47 @@ void MainWindow::configurarNivel1()
 }
 
 
+void MainWindow::configurarNivel2(){
+    juegoTerminado = false;
+    vueltasJugador = 0;
+
+    escena = new QGraphicsScene(this);
+    escena->setSceneRect(0, 0, 1000, 600);
+    ui->graphicsView->setScene(escena);
+
+    //Se inicia la lista que con tiene los obstaculos del nivel 2//
+    obstaculosNivel2.clear();
+
+    // Se crea el jugador//
+    jugador = new Vehiculo();
+    escena->addItem(jugador);
+    jugador->setPosicion(50, 400);
+
+    QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
+    piso->setBrush(Qt::darkGreen);
+    escena->addItem(piso);
+
+    meta = new QGraphicsRectItem(0, 0, 10, 600);
+    meta->setPos(0, 0);
+    meta->setBrush(Qt::yellow);
+    escena->addItem(meta);
+
+    muro_rojo=nullptr;
+
+    Obstaculo *obs1 = new Obstaculo(300, 350, 0, 0);
+    escena->addItem(obs1);
+    obstaculosNivel2.append(obs1);
+
+    Obstaculo *obs2 = new Obstaculo(550, 350, 0, 0);
+    escena->addItem(obs2);
+    obstaculosNivel2.append(obs2);
+
+    Obstaculo *obs3 = new Obstaculo(700, 350, 0, 0);
+    escena->addItem(obs3);
+    obstaculosNivel2.append(obs3);
+
+}
+
 void MainWindow::actualizarJuego()
 {
     if (juegoTerminado) return;
@@ -70,9 +113,11 @@ void MainWindow::actualizarJuego()
 
     verificarMeta(jugador, vueltasJugador);
 
-    jugador->actualizarFisicaNivel1();
+    jugador->actualizarFisicaNivel2();
 
-    verificarColisionesNivel1();
+    verificarColisionesNivel2();
+
+    //verificarColisionesNivel1();
 }
 
 
@@ -94,6 +139,23 @@ void MainWindow::verificarColisionesNivel1() {
         }
 
         jugador->setPos(jugador->getX() - 10, jugador->getY());
+    }
+}
+
+void MainWindow::verificarColisionesNivel2() {
+    if (obstaculosNivel2.isEmpty()) return;
+
+    double x_previo = jugador->getX();
+
+    foreach (QGraphicsItem *obs, obstaculosNivel2) {
+        if (jugador->collidesWithItem(obs)) {
+
+            jugador->setVelX(0);
+
+            jugador->setPosicion(x_previo - 5, jugador->getY());
+
+            return;
+        }
     }
 }
 
@@ -145,6 +207,12 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
         jugador->setFuerzaMotor(-300);
         jugador->acelerar(true);
     }
+
+    //Se usa mayoritariamente para el nivel 2, y consiste en saltar para esquivar os obstaculos//
+    if(event->key() == Qt::Key_Space) {
+        jugador->saltar();
+    }
+
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event)
