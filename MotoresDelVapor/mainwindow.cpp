@@ -80,6 +80,7 @@ void MainWindow::configurarNivel2(){
     escena->addItem(jugador);
     jugador->setPosicion(50, 400);
 
+    //Se hace el piso //
     QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
     piso->setBrush(Qt::darkGreen);
     escena->addItem(piso);
@@ -162,33 +163,34 @@ void MainWindow::verificarColisionesNivel2() {
 void MainWindow::verificarMeta(Vehiculo *v, int &vueltas)
 {
     if (juegoTerminado) return;
-
-    if (v->collidesWithItem(meta)) {
-
-        if (v->getVelX() > 0.1) {
-
-            vueltas++;
-
-            if (vueltas >= 5) {
-                juegoTerminado = true;
-            }
-        }
-    }
 }
 
 void MainWindow::verificarLimites(Vehiculo *v)
 {
     double anchoEscena = 1000;
 
-    //Se veirifican los limites externos, ya sea derecho o izquierdo//
+    //Se veirifican los limites externos izquierdo//
     if (v->getX() < 0) {
         v->setPosicion(0, v->getY());
         v->setVelX(0);
     }
 
+    //Se verifican los limites externos derechos//
     if (v->getX() > anchoEscena - v->boundingRect().width()) {
 
+        if (!juegoTerminado) {
+            vueltasJugador++;
+            qDebug() << "Total de vueltas:" << vueltasJugador;
+
+            if (vueltasJugador >= 5) {
+                juegoTerminado = true;
+                qDebug() << "Ganaste";
+            }
+        }
+
+        //Se le reinicia la posicion//
         v->setPosicion(5, v->getY());
+
          //Se le aplica la penalizacionh de 25% por el obstaculo //
         v->setVelX(v->getVelX() * 0.75);
     }
