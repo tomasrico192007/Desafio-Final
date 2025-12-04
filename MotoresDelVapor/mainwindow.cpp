@@ -25,7 +25,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     //SE empieza la configuracion para el primer nivel//
     //configurarNivel1();
-    configurarNivel2();
+    //configurarNivel2();
+    configurarNivel3();
     verificarColisionesNivel2();
 
     timer->start(16);
@@ -106,19 +107,67 @@ void MainWindow::configurarNivel2(){
 
 }
 
+void MainWindow::configurarNivel3()
+{
+    juegoTerminado = false;
+    vueltasJugador = 0;
+
+    escena = new QGraphicsScene(this);
+    escena->setSceneRect(0, 0, 1000, 600);
+    ui->graphicsView->setScene(escena);
+
+    jugador = new Vehiculo();
+    jugador->setPosicion(50, 400);
+    escena->addItem(jugador);
+
+    QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
+    piso->setBrush(Qt::darkGray);
+    escena->addItem(piso);
+
+    obstaculosNivel2.clear();
+
+    Obstaculo *obs1 = new Obstaculo(250, 250, 100, 1.5);
+    escena->addItem(obs1);
+    obstaculosNivel2.append(obs1);
+
+    Obstaculo *obs2 = new Obstaculo(450, 300, 50, 4.0);
+    escena->addItem(obs2);
+    obstaculosNivel2.append(obs2);
+
+    Obstaculo *obs3 = new Obstaculo(650, 200, 150, 2.0);
+    escena->addItem(obs3);
+    obstaculosNivel2.append(obs3);
+
+    Obstaculo *obs4 = new Obstaculo(850, 300, 50, 4.0);
+    escena->addItem(obs4);
+    obstaculosNivel2.append(obs4);
+}
+
+
 void MainWindow::actualizarJuego()
 {
     if (juegoTerminado) return;
 
-    verificarLimites(jugador);
+    static double tiempoTotal = 0.0;
+    double dt = 16.0 / 1000.0;
 
+    foreach (QGraphicsItem *item, obstaculosNivel2) {
+
+        Obstaculo *obs = dynamic_cast<Obstaculo*>(item);
+        if (obs) {
+            obs->actualizarMovimientoOscilatorio(tiempoTotal);
+        }
+    }
+
+    verificarLimites(jugador);
     verificarMeta(jugador, vueltasJugador);
 
     jugador->actualizarFisicaNivel2();
-
     verificarColisionesNivel2();
 
     //verificarColisionesNivel1();
+
+    tiempoTotal +=dt;
 }
 
 
@@ -146,14 +195,15 @@ void MainWindow::verificarColisionesNivel1() {
 void MainWindow::verificarColisionesNivel2() {
     if (obstaculosNivel2.isEmpty()) return;
 
-    double x_previo = jugador->getX();
+    //double x_previo = jugador->getX();
 
     foreach (QGraphicsItem *obs, obstaculosNivel2) {
         if (jugador->collidesWithItem(obs)) {
 
             jugador->setVelX(0);
+            jugador->setVelY(0);
 
-            jugador->setPosicion(x_previo - 5, jugador->getY());
+            jugador->setPosicion(50,400);
 
             return;
         }

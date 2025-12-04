@@ -50,6 +50,7 @@ private:
     void verificarMeta(Vehiculo *v, int &vueltas);
     void configurarNivel1();
     void configurarNivel2();
+    void configurarNivel3();
     void verificarColisionesNivel1();
 };
 #endif // MAINWINDOW_H

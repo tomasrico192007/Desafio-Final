@@ -21,7 +21,8 @@ public:
 
     //setter para cuando se escriban los valores//
     void setVelX(double v) { velocidad_x = v; }
-    void setX(double x) { x_pos = x; } // Necesario para corregir colisión
+    void setVelY(double v) { velocidad_y = v; }
+    void setX(double x) { x_pos = x; } // Necesario para corregir colisión//
 
 protected:
     //variables de la posicion y la velocidad//
