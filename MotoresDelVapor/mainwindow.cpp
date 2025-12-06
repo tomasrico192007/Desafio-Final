@@ -31,6 +31,8 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::configurarNivel1()
 {
+    vueltasBot1 = 0;
+    vueltasBot2 = 0;
     juegoTerminado = false;
     vueltasJugador = 0;
 
@@ -41,8 +43,23 @@ void MainWindow::configurarNivel1()
 
     //Se crea el vehiculo en la escena y lo ponemos en el piso//
     jugador = new Vehiculo();
+    jugador->setColor(Qt::blue);
     escena->addItem(jugador);
     jugador->setPosicion(50, 400);
+
+    //Se crean los bots, y se ponen en las mismas coordenadas del jugador, para que empiecen en igualdad de condiciones//
+    bot1 = new Vehiculo();
+    bot1->setColor(Qt::red);
+    bot1->setPosicion(50, 400);
+    bot1->setFuerzaMotor(140);
+    escena->addItem(bot1);
+
+    bot2 = new Vehiculo();
+    bot2->setColor(Qt::magenta);
+    bot2->setPosicion(50, 400);
+    bot2->setFuerzaMotor(160);
+    escena->addItem(bot2);
+
 
     //Se dibuja el piso, para que el carro sepa dond delimita//
     QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
@@ -147,7 +164,23 @@ void MainWindow::actualizarJuego()
 
     if (nivelActual == 1) {
         jugador->actualizarFisicaNivel1();
-        verificarColisionesNivel1();
+        verificarColisionesNivel1(jugador);
+
+        //Logica del bot1, es el que nunca para de acelerar, por eso se pone en true la aceleracion//
+        if (bot1) {
+            bot1->acelerar(true); // Siempre acelera
+            bot1->actualizarFisicaNivel1();
+            verificarColisionesNivel1(bot1);
+        }
+
+        if (bot2) {
+            int suerte = rand() % 100;
+            if (suerte < 90) bot2->acelerar(true);
+            else bot2->acelerar(false);
+            bot2->actualizarFisicaNivel1();
+            verificarColisionesNivel1(bot2);
+        }
+
     }
     else if (nivelActual == 2) {
         jugador->actualizarFisicaNivel2();
@@ -167,28 +200,32 @@ void MainWindow::actualizarJuego()
         tiempoNivel3 += (16.0 / 1000.0);
     }
 
-    verificarLimites(jugador);
-}
+    verificarLimites(jugador, vueltasJugador, "JUGADOR");
+
+    verificarLimites(jugador, vueltasJugador, "JUGADOR");
+    verificarLimites(bot1, vueltasBot1, "BOT ROJO");
+    verificarLimites(bot2, vueltasBot2, "BOT MAGENTA");
+    }
 
 
-void MainWindow::verificarColisionesNivel1() {
+void MainWindow::verificarColisionesNivel1(Vehiculo *v) {
 
     const double VELOCIDAD_MAXIMA_SEGURA = 20.0;
 
-    if (jugador->collidesWithItem(muro_rojo)) {
+    if (v->collidesWithItem(muro_rojo)) {
 
-        double velXActual = jugador->getVelX();
+        double velXActual = v->getVelX();
 
         if (velXActual > VELOCIDAD_MAXIMA_SEGURA) {
 
-            jugador->setVelX(velXActual * 0.25);
+            v->setVelX(velXActual * 0.25);
 
         } else {
 
-            jugador->setVelX(velXActual * 0.95);
+            v->setVelX(velXActual * 0.95);
         }
 
-        jugador->setPos(jugador->getX() - 10, jugador->getY());
+        v->setPos(v->getX() - 10, v->getY());
     }
 }
 
@@ -215,7 +252,7 @@ void MainWindow::verificarMeta(Vehiculo *v, int &vueltas)
     if (juegoTerminado) return;
 }
 
-void MainWindow::verificarLimites(Vehiculo *v)
+void MainWindow::verificarLimites(Vehiculo *v, int &vueltas, QString nombre)
 {
     double anchoEscena = 1000;
 
@@ -228,16 +265,20 @@ void MainWindow::verificarLimites(Vehiculo *v)
     //Se verifican los limites externos derechos//
     if (v->getX() > anchoEscena - v->boundingRect().width()) {
 
-        if (!juegoTerminado) {
-            vueltasJugador++;
-            qDebug() << "Total de vueltas:" << vueltasJugador;
+        vueltas++;
+        qDebug() << "Vuelta para " << nombre << ": " << vueltas;
 
-            if (vueltasJugador >= 5) {
+        // 2. Verificar si alguien ganó
+        if (vueltas >= 5) {
+            juegoTerminado = true;
+
+            if (nombre == "JUGADOR") {
                 siguienteNivel();
-                return;
+            } else {
+                qDebug() << "Ustewd perdio, gano el bot" << nombre;
             }
+            return;
         }
-
         //Se le reinicia la posicion//
         v->setPosicion(5, v->getY());
 

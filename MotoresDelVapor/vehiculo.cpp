@@ -6,6 +6,8 @@ Vehiculo::Vehiculo() {
     friccion = 0.08;
     motorEncendido = false;
 
+    colorCarro =Qt::blue;
+
     gravedad = 9.8;
     enElAire = false;
 }
@@ -72,6 +74,10 @@ void Vehiculo::actualizarFisicaNivel2() {
 }
 
 void Vehiculo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->setBrush(Qt::blue); //Se hace que el jugador o carro sea de azul//
+    painter->setBrush(colorCarro); //Se hace que el jugador o carro sea de azul//
     painter->drawRect(0, 0, 60, 30); //Se setea o se pone la forma del carro, o las medidaas//
 }
+
+void Vehiculo::setColor(QColor nuevoColor) {
+    colorCarro = nuevoColor;
+    }

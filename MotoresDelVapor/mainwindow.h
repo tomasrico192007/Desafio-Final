@@ -52,11 +52,11 @@ private:
     void siguienteNivel();
 
     //Funciones graficas, especicifamente para el nivel 1//
-    void verificarLimites(Vehiculo *v);
+    void verificarLimites(Vehiculo *v, int &vueltas, QString nombre);
     void verificarMeta(Vehiculo *v, int &vueltas);
     void configurarNivel1();
     void configurarNivel2();
     void configurarNivel3();
-    void verificarColisionesNivel1();
+    void verificarColisionesNivel1(Vehiculo *v);
 };
 #endif // MAINWINDOW_H
