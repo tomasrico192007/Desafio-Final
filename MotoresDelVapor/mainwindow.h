@@ -44,7 +44,7 @@ private:
     QGraphicsRectItem *meta;
 
     QList<QGraphicsItem*> obstaculosNivel2;
-    void verificarColisionesNivel2();
+    void verificarColisionesNivel2(Vehiculo *v);
 
     void keyPressEvent(QKeyEvent *event) override;
     void keyReleaseEvent(QKeyEvent *event) override;

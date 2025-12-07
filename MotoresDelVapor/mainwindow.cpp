@@ -82,6 +82,8 @@ void MainWindow::configurarNivel1()
 void MainWindow::configurarNivel2(){
     juegoTerminado = false;
     vueltasJugador = 0;
+    vueltasBot1= 0;
+    vueltasBot2= 0;
 
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1000, 600);
@@ -94,6 +96,19 @@ void MainWindow::configurarNivel2(){
     jugador = new Vehiculo();
     escena->addItem(jugador);
     jugador->setPosicion(50, 400);
+
+    //Se crean los bots, y se ponen en las mismas coordenadas del jugador, para que empiecen en igualdad de condiciones//
+    bot1 = new Vehiculo();
+    bot1->setColor(Qt::red);
+    bot1->setPosicion(50, 400);
+    bot1->setFuerzaMotor(140);
+    escena->addItem(bot1);
+
+    bot2 = new Vehiculo();
+    bot2->setColor(Qt::magenta);
+    bot2->setPosicion(50, 400);
+    bot2->setFuerzaMotor(160);
+    escena->addItem(bot2);
 
     //Se hace el piso //
     QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
@@ -125,6 +140,8 @@ void MainWindow::configurarNivel3()
 {
     juegoTerminado = false;
     vueltasJugador = 0;
+    vueltasBot1 = 0;
+    vueltasBot2= 0;
 
     escena = new QGraphicsScene(this);
     escena->setSceneRect(0, 0, 1000, 600);
@@ -133,6 +150,19 @@ void MainWindow::configurarNivel3()
     jugador = new Vehiculo();
     jugador->setPosicion(50, 400);
     escena->addItem(jugador);
+
+    //Se crean los bots, y se ponen en las mismas coordenadas del jugador, para que empiecen en igualdad de condiciones//
+    bot1 = new Vehiculo();
+    bot1->setColor(Qt::red);
+    bot1->setPosicion(50, 400);
+    bot1->setFuerzaMotor(140);
+    escena->addItem(bot1);
+
+    bot2 = new Vehiculo();
+    bot2->setColor(Qt::magenta);
+    bot2->setPosicion(50, 400);
+    bot2->setFuerzaMotor(160);
+    escena->addItem(bot2);
 
     QGraphicsRectItem *piso = new QGraphicsRectItem(0, 430, 1000, 10);
     piso->setBrush(Qt::darkGray);
@@ -173,6 +203,7 @@ void MainWindow::actualizarJuego()
             verificarColisionesNivel1(bot1);
         }
 
+        //Logfica del bot2, es que lit es random, el va a acelerar o desacelerar aleatoriamente o random, por eso se usa esa funcion//
         if (bot2) {
             int suerte = rand() % 100;
             if (suerte < 90) bot2->acelerar(true);
@@ -184,11 +215,40 @@ void MainWindow::actualizarJuego()
     }
     else if (nivelActual == 2) {
         jugador->actualizarFisicaNivel2();
-        verificarColisionesNivel2();
+        verificarColisionesNivel2(jugador);
+
+        if (bot1) {
+            bot1->acelerar(true);
+            int salto = rand() % 100;
+            if (salto < 5) bot1->saltar();
+
+            bot1->actualizarFisicaNivel2();
+            verificarColisionesNivel2(bot1);
+        }
+
+        if (bot2) {
+            bot2->acelerar(true);
+            int salto = rand() % 100;
+            if (salto < 10) bot2->saltar();
+
+            bot2->actualizarFisicaNivel2();
+            verificarColisionesNivel2(bot2);
+        }
     }
     else if (nivelActual == 3) {
         jugador->actualizarFisicaNivel2();
-        verificarColisionesNivel2();
+        verificarColisionesNivel2(jugador);
+
+        if (bot1) {
+            bot1->acelerar(true);
+            bot1->actualizarFisicaNivel2();
+            verificarColisionesNivel2(bot1);
+        }
+        if (bot2) {
+            bot2->acelerar(true);
+            bot2->actualizarFisicaNivel2();
+            verificarColisionesNivel2(bot2);
+        }
 
         foreach (QGraphicsItem *item, obstaculosNivel2) {
             Obstaculo *obs = dynamic_cast<Obstaculo*>(item);
@@ -229,18 +289,18 @@ void MainWindow::verificarColisionesNivel1(Vehiculo *v) {
     }
 }
 
-void MainWindow::verificarColisionesNivel2() {
+void MainWindow::verificarColisionesNivel2(Vehiculo *v) {
     if (obstaculosNivel2.isEmpty()) return;
 
     //double x_previo = jugador->getX();
 
     foreach (QGraphicsItem *obs, obstaculosNivel2) {
-        if (jugador->collidesWithItem(obs)) {
+        if (v->collidesWithItem(obs)) {
 
-            jugador->setVelX(0);
-            jugador->setVelY(0);
+            v->setVelX(0);
+            v->setVelY(0);
 
-            jugador->setPosicion(50,400);
+            v->setPosicion(50,400);
 
             return;
         }
@@ -266,7 +326,6 @@ void MainWindow::verificarLimites(Vehiculo *v, int &vueltas, QString nombre)
     if (v->getX() > anchoEscena - v->boundingRect().width()) {
 
         vueltas++;
-        qDebug() << "Vuelta para " << nombre << ": " << vueltas;
 
         // 2. Verificar si alguien ganó
         if (vueltas >= 5) {
@@ -303,7 +362,6 @@ void MainWindow::siguienteNivel()
     }
     else if (nivelActual == 3) {
         juegoTerminado = true;
-        qDebug() << "¡FELICIDADES! HAS COMPLETADO TODOS LOS NIVELES.";
         // Aquí podrías mostrar un GraphicsTextItem que diga "GANASTE"
         return;
     }
