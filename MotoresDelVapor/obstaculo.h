@@ -24,6 +24,7 @@ private:
     double centroY;
     double amplitud;
     double frecuencia;
+    QPixmap obstaculoSprite;
 };
 
 #endif // OBSTACULO_H

@@ -70,6 +70,7 @@ void MainWindow::configurarNivel1()
     muro_rojo = new Obstaculo(
         400, 350, 0.0,0.0 );
     muro_rojo->setPos(400, 350);
+    muro_rojo->setSprite(":/Velocimetro.png");
     escena->addItem(muro_rojo);
 
     //Se dibuja la meta//
@@ -127,16 +128,19 @@ void MainWindow::configurarNivel2(){
 
     muro_rojo=nullptr;
 
-    Obstaculo *obs1 = new Obstaculo(300, 350, 0, 0);
+    Obstaculo *obs1 = new Obstaculo(300, 400, 0, 0);
     escena->addItem(obs1);
+    obs1->setSprite(":/Pinchos.png");
     obstaculosNivel2.append(obs1);
 
-    Obstaculo *obs2 = new Obstaculo(550, 350, 0, 0);
+    Obstaculo *obs2 = new Obstaculo(550, 400, 0, 0);
     escena->addItem(obs2);
+    obs2->setSprite(":/Pinchos.png");
     obstaculosNivel2.append(obs2);
 
-    Obstaculo *obs3 = new Obstaculo(700, 350, 0, 0);
+    Obstaculo *obs3 = new Obstaculo(700, 400, 0, 0);
     escena->addItem(obs3);
+    obs3->setSprite(":/Pinchos.png");
     obstaculosNivel2.append(obs3);
 
     QPixmap fondo1(":/Nivel2.png");
@@ -180,21 +184,25 @@ void MainWindow::configurarNivel3()
 
     obstaculosNivel2.clear();
 
-    Obstaculo *obs1 = new Obstaculo(250, 250, 100, 1.5);
-    escena->addItem(obs1);
-    obstaculosNivel2.append(obs1);
+    Obstaculo *piston1 = new Obstaculo(250, 250, 100, 1.5);
+    escena->addItem(piston1);
+    piston1->setSprite(":/Piston.png");
+    obstaculosNivel2.append(piston1);
 
-    Obstaculo *obs2 = new Obstaculo(450, 300, 50, 4.0);
-    escena->addItem(obs2);
-    obstaculosNivel2.append(obs2);
+    Obstaculo *piston2 = new Obstaculo(450, 300, 50, 4.0);
+    escena->addItem(piston2);
+    piston2->setSprite(":/Piston.png");
+    obstaculosNivel2.append(piston2);
 
-    Obstaculo *obs3 = new Obstaculo(650, 200, 150, 2.0);
-    escena->addItem(obs3);
-    obstaculosNivel2.append(obs3);
+    Obstaculo *piston3 = new Obstaculo(650, 200, 150, 2.0);
+    escena->addItem(piston3);
+    piston3->setSprite(":/Piston.png");
+    obstaculosNivel2.append(piston3);
 
-    Obstaculo *obs4 = new Obstaculo(850, 300, 50, 4.0);
-    escena->addItem(obs4);
-    obstaculosNivel2.append(obs4);
+    Obstaculo *piston4 = new Obstaculo(850, 300, 50, 4.0);
+    escena->addItem(piston4);
+    piston4->setSprite(":/Piston.png");
+    obstaculosNivel2.append(piston4);
 
     QPixmap fondo1(":/Nivel3.png");
     escena->setBackgroundBrush(fondo1.scaled(1000, 600));

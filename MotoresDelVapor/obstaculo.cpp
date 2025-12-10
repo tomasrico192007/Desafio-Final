@@ -17,9 +17,18 @@ void Obstaculo::actualizarMovimientoOscilatorio(double tiempoTotal) {
 }
 
 void Obstaculo::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
-    painter->setBrush(Qt::red); // Los obstaulos son rojos tal cual como lo hice en mi laboratorio//
-    //En este aprtado se dibuja un piston para el nivel 3//
-    painter->drawRect(0, 0, 30, 80);
+    if (!obstaculoSprite.isNull()) {
+        painter->drawPixmap(0, 0, 40, 60, obstaculoSprite);
+
+    } else {
+        painter->setBrush(Qt::red);
+        painter->drawRect(0, 0, 30, 80);
+    }
+}
+
+void Obstaculo::setSprite(const QString &path) {
+    if (!obstaculoSprite.load(path)) {
+    }
 }
 
 QRectF Obstaculo::boundingRect() const
