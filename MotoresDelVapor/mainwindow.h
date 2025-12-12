@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <QGraphicsScene>
+#include <QMediaPlayer>
+#include <QAudioOutput>
 #include <QTimer> //para el loop o el tiempo del nivel//
 #include <QKeyEvent> //para implementar el tecleado, jugar con el teclado//
 #include "vehiculo.h"
@@ -50,6 +52,11 @@ private:
     void keyReleaseEvent(QKeyEvent *event) override;
 
     void siguienteNivel();
+
+    QMediaPlayer *sonidoMotor;
+    QAudioOutput *audioOutputMotor;
+    QMediaPlayer *sonidoChoque;
+    QAudioOutput *audioOutputChoque;
 
     //Funciones graficas, especicifamente para el nivel 1//
     void verificarLimites(Vehiculo *v, int &vueltas, QString nombre);

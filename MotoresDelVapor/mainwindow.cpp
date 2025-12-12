@@ -24,9 +24,20 @@ MainWindow::MainWindow(QWidget *parent)
     connect(timer, &QTimer::timeout, this, &MainWindow::actualizarJuego);
 
     /*nivelActual = 1;
-    configurarNivel1();
+    configurarNivel1();ddt
 
     timer->start(16);*/
+
+    //parte del sonido//
+    sonidoMotor = new QMediaPlayer();
+    audioOutputMotor = new QAudioOutput();
+
+    sonidoMotor->setAudioOutput(audioOutputMotor);
+
+    sonidoMotor->setSource(QUrl("qrc:/motor.mp3"));
+
+    audioOutputMotor->setVolume(0.8);
+
     configurarMenu();
 }
 
@@ -435,10 +446,13 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_D) {
         jugador->setFuerzaMotor(200);
         jugador->acelerar(true);
+        if (sonidoMotor->playbackState() != QMediaPlayer::PlayingState) {
+            sonidoMotor->play();
+        }
     }
     //Se frena o se le mete reveresa o cambio a atras con la A, reemplazando la S//
     if(event->key() == Qt::Key_A) {
-        jugador->setFuerzaMotor(-300);
+        jugador->setFuerzaMotor(-100);
         jugador->acelerar(true);
     }
 
