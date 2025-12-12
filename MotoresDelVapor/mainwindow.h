@@ -44,7 +44,7 @@ private:
     int vueltasBot2;
 
     QGraphicsRectItem *meta;
-
+    QGraphicsTextItem *textoGanaste;
     QList<QGraphicsItem*> obstaculosNivel2;
     void verificarColisionesNivel2(Vehiculo *v);
 

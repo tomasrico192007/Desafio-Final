@@ -422,7 +422,27 @@ void MainWindow::siguienteNivel()
     }
     else if (nivelActual == 3) {
         juegoTerminado = true;
-        // Aquí podrías mostrar un GraphicsTextItem que diga "GANASTE"
+
+        textoGanaste = new QGraphicsTextItem("GANASTE EL JUEGO");
+
+        QFont font;
+        font.setPointSize(48);
+        font.setBold(true);
+        textoGanaste->setFont(font);
+
+        textoGanaste->setDefaultTextColor(Qt::yellow);
+
+        double anchoEscena = 1000.0;
+        double altoEscena = 600.0;
+
+        double anchoTexto = textoGanaste->boundingRect().width();
+        double altoTexto = textoGanaste->boundingRect().height();
+
+        textoGanaste->setPos((anchoEscena / 2.0) - (anchoTexto / 2.0),
+                             (altoEscena / 2.0) - (altoTexto / 2.0));
+
+        escena->addItem(textoGanaste);
+
         return;
     }
 
